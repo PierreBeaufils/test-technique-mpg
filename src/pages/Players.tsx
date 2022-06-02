@@ -4,6 +4,7 @@ import displayPosition from "../utils/displayPosition"
 
 function Players() {
   const [players, setPlayers] = useState<Array<any>>([])
+  const [teams, setTeams] = useState<any>({})
   const [activeColumn, setActiveColumn] = useState<string>("")
   const [nameOrder, setNameOrder] = useState<"asc" | "desc">("desc")
   const [positionOrder, setPositionOrder] = useState<"asc" | "desc">("desc")
@@ -19,7 +20,18 @@ function Players() {
       setPlayers(response.poolPlayers)
     }
 
+    const fetchTeams = async () => {
+      const response = await fetch(
+        "https://api.mpg.football/api/data/championship-clubs"
+      )
+        .then((response) => response.json())
+        .catch((error) => console.error("error fetching data: ", error))
+
+      setTeams(response.championshipClubs)
+    }
+
     fetchPlayers()
+    fetchTeams()
   }, [])
 
   const filterByName = () => {
@@ -56,10 +68,17 @@ function Players() {
     }
   }
 
+  const findJersey = (player: any): string => {
+    console.log(teams)
+
+    const team = teams[player.clubId]
+    return team.defaultJerseyUrl
+  }
+
   return (
     <div className="">
       <div className="max-w-2xl mx-auto mt-20">
-        {players && (
+        {players && teams && (
           <div className="mx-auto">
             <div className="flex flex-row border-b text-center font-semibold">
               <div
@@ -86,8 +105,18 @@ function Players() {
               {players.map((player) => (
                 <Link to={`/players/${player.id}`} key={player.id}>
                   <div className="border-b hover:bg-gray-100 cursor-pointer flex flex-row">
-                    <div className="w-full lg:w-80 py-2 px-2">
-                      {player.firstName} {player.lastName}
+                    <div className="w-full lg:w-80 py-2 px-2 flex flex-row gap-2 items-center">
+                      <span className="">
+                        <img
+                          src={findJersey(player)}
+                          alt="team jersey"
+                          width={27}
+                          height={27}
+                        />
+                      </span>
+                      <span>
+                        {player.firstName} {player.lastName}
+                      </span>
                     </div>
                     <div className="w-20 py-2 px-2 text-center">
                       {player.quotation}
