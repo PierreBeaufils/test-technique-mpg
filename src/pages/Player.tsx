@@ -1,26 +1,35 @@
-import { useEffect } from "react"
-import { useParams } from "react-router"
+import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
+import { useParams } from "react-router"
 
 function Player() {
   let { playerId } = useParams()
 
+  const [player, setPlayer] = useState<any | null>(null)
+
   useEffect(() => {
-    // Fetch post using the postSlug
+    const fetchPlayer = async () => {
+      const response = await fetch(
+        `https://api.mpg.football/api/data/championship-player-stats/${playerId}/2021`
+      )
+        .then((response) => response.json())
+        .catch((error) => console.error("error fetching data: ", error))
+
+      setPlayer(response)
+      console.log(response)
+    }
+
+    fetchPlayer()
   }, [playerId])
 
   return (
     <div className="home">
       <div className="container">
-        <Link to="/blog/this-is-a-post-title">
-          <div className="row align-items-center my-5">
-            <div className="col-lg-7"></div>
-            <div className="col-lg-5">
-              <h1 className="font-weight-light">This is a post title</h1>
-              <p>Joueur X</p>
-            </div>
-          </div>
-        </Link>
+        {player && (
+          <p>
+            {player.firstName} {player.lastName}
+          </p>
+        )}
       </div>
     </div>
   )
