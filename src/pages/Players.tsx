@@ -76,71 +76,69 @@ function Players() {
   }
 
   return (
-    <div className="">
-      <div className="max-w-2xl mx-auto mt-20">
-        {players && teams && (
-          <div className="mx-auto">
-            <div className="flex flex-row border-b text-center font-semibold">
-              <div
-                onClick={() => filterByName()}
-                className={`w-full lg:w-80 py-2 px-2 cursor-pointer ${
-                  activeColumn === "name" ? "text-blue-500" : "text-black"
-                }`}
-              >
-                Joueurs
-              </div>
-              <div className="w-20 py-2 px-2">Cote</div>
-              <div className="w-20 py-2 px-2">Note</div>
-              <div className="w-20 py-2 px-2">Buts</div>
-              <div
-                onClick={() => filterByPosition()}
-                className={`w-20 py-2 px-2 cursor-pointer ${
-                  activeColumn === "position" ? "text-blue-500" : "text-black"
-                }`}
-              >
-                Poste
-              </div>
+    <div className="max-w-2xl mx-auto mt-20">
+      {players && teams && (
+        <div className="mx-auto">
+          <div className="flex flex-row border-b text-center font-semibold">
+            <div
+              onClick={() => filterByName()}
+              className={`w-full lg:w-80 py-2 px-2 cursor-pointer ${
+                activeColumn === "name" ? "text-blue-500" : "text-black"
+              }`}
+            >
+              Joueurs
             </div>
-            <div className="flex flex-col">
-              {players.map((player) => (
-                <Link to={`/players/${player.id}`} key={player.id}>
-                  <div className="border-b hover:bg-gray-100 cursor-pointer flex flex-row">
-                    <div className="w-full lg:w-80 py-2 px-2 flex flex-row gap-2 items-center">
-                      <span className="">
-                        <img
-                          src={findJersey(player)}
-                          alt="team jersey"
-                          width={27}
-                          height={27}
-                        />
-                      </span>
-                      <span>
-                        {player.firstName} {player.lastName}
-                      </span>
-                    </div>
-                    <div className="w-20 py-2 px-2 text-center">
-                      {player.quotation}
-                    </div>
-                    <div className="w-20 py-2 px-2 text-center">
-                      {/* Note mise à 0 par défault si averageRating est null/undefined */}
-                      {player.stats.averageRating
-                        ? player.stats.averageRating.toFixed(1)
-                        : "5.0"}
-                    </div>
-                    <div className="w-20 py-2 px-2 text-center">
-                      {/* Buts mise à 0 par défault si totalGoals est null/undefined */}
-                      {player.stats.totalGoals ? player.stats.totalGoals : "0"}
-                    </div>
-                    <div className="w-20 py-2 px-2 text-center">
-                      {displayPosition(player.ultraPosition)}
-                    </div>
-                  </div>
-                </Link>
-              ))}
+            <div className="w-20 py-2 px-2">Cote</div>
+            <div className="w-20 py-2 px-2">Note</div>
+            <div className="w-20 py-2 px-2">Buts</div>
+            <div
+              onClick={() => filterByPosition()}
+              className={`w-20 py-2 px-2 cursor-pointer ${
+                activeColumn === "position" ? "text-blue-500" : "text-black"
+              }`}
+            >
+              Poste
             </div>
           </div>
-        )}
-      </div>
+          <div className="flex flex-col">
+            {players.map((player) => (
+              <Link to={`/players/${player.id}`} key={player.id}>
+                <div className="border-b hover:bg-gray-100 cursor-pointer flex flex-row">
+                  <div className="w-full lg:w-80 py-2 px-2 flex flex-row gap-2 items-center">
+                    <span className="">
+                      <img
+                        src={findJersey(player)}
+                        alt="team jersey"
+                        width={27}
+                        height={27}
+                      />
+                    </span>
+                    <span>
+                      {player.firstName} {player.lastName}
+                    </span>
+                  </div>
+                  <div className="w-20 py-2 px-2 text-center">
+                    {player.quotation}
+                  </div>
+                  <div className="w-20 py-2 px-2 text-center">
+                    {/* Note mise à 0 par défault si averageRating est null/undefined */}
+                    {player.stats.averageRating
+                      ? player.stats.averageRating.toFixed(1)
+                      : "5.0"}
+                  </div>
+                  <div className="w-20 py-2 px-2 text-center">
+                    {/* Buts mis à 0 par défault si totalGoals est null/undefined */}
+                    {player.stats.totalGoals ? player.stats.totalGoals : "0"}
+                  </div>
+                  <div className="w-20 py-2 px-2 text-center">
+                    {displayPosition(player.ultraPosition)}
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
