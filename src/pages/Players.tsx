@@ -5,7 +5,8 @@ import displayPosition from "../utils/displayPosition"
 function Players() {
   const [players, setPlayers] = useState<Array<any>>([])
   const [activeColumn, setActiveColumn] = useState<string>("")
-  const [nameOrder, setNameOrder] = useState<string>("")
+  const [nameOrder, setNameOrder] = useState<"asc" | "desc">("desc")
+  const [positionOrder, setPositionOrder] = useState<"asc" | "desc">("desc")
 
   useEffect(() => {
     const fetchPlayers = async () => {
@@ -23,18 +24,35 @@ function Players() {
 
   const filterByName = () => {
     setActiveColumn("name")
-    if (nameOrder === "asc") {
+    if (nameOrder === "desc") {
       const filteredPlayers = players.sort((a, b) => {
         return a.lastName.localeCompare(b.lastName)
       })
       setPlayers(filteredPlayers)
-      setNameOrder("desc")
+      setNameOrder("asc")
     } else {
       const filteredPlayers = players.sort((a, b) => {
         return b.lastName.localeCompare(a.lastName)
       })
       setPlayers(filteredPlayers)
-      setNameOrder("asc")
+      setNameOrder("desc")
+    }
+  }
+
+  const filterByPosition = () => {
+    setActiveColumn("position")
+    if (positionOrder === "desc") {
+      const filteredPlayers = players.sort(
+        (a, b) => a.ultraPosition - b.ultraPosition
+      )
+      setPlayers(filteredPlayers)
+      setPositionOrder("asc")
+    } else {
+      const filteredPlayers = players.sort(
+        (a, b) => b.ultraPosition - a.ultraPosition
+      )
+      setPlayers(filteredPlayers)
+      setPositionOrder("desc")
     }
   }
 
@@ -55,7 +73,14 @@ function Players() {
               <div className="w-20 py-2 px-2">Cote</div>
               <div className="w-20 py-2 px-2">Note</div>
               <div className="w-20 py-2 px-2">Buts</div>
-              <div className="w-20 py-2 px-2">Poste</div>
+              <div
+                onClick={() => filterByPosition()}
+                className={`w-20 py-2 px-2 cursor-pointer ${
+                  activeColumn === "position" ? "text-blue-500" : "text-black"
+                }`}
+              >
+                Poste
+              </div>
             </div>
             <div className="flex flex-col">
               {players.map((player) => (
