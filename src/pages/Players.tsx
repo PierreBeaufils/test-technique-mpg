@@ -1,13 +1,13 @@
-import { useState, useEffect } from "react"
-import { Link } from "react-router-dom"
-import displayPosition from "../utils/displayPosition"
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import displayPosition from "../utils/displayPosition";
 
 function Players() {
-  const [players, setPlayers] = useState<Array<any>>([])
-  const [teams, setTeams] = useState<any>({})
-  const [activeColumn, setActiveColumn] = useState<string>("")
-  const [nameOrder, setNameOrder] = useState<"asc" | "desc">("desc")
-  const [positionOrder, setPositionOrder] = useState<"asc" | "desc">("desc")
+  const [players, setPlayers] = useState<Array<any>>([]);
+  const [teams, setTeams] = useState<any>({});
+  const [activeColumn, setActiveColumn] = useState<string>("");
+  const [nameOrder, setNameOrder] = useState<"asc" | "desc">("desc");
+  const [positionOrder, setPositionOrder] = useState<"asc" | "desc">("desc");
 
   useEffect(() => {
     const fetchPlayers = async () => {
@@ -15,65 +15,63 @@ function Players() {
         "https://api.mpg.football/api/data/championship-players-pool/1"
       )
         .then((response) => response.json())
-        .catch((error) => console.error("error fetching data: ", error))
+        .catch((error) => console.error("error fetching data: ", error));
 
-      setPlayers(response.poolPlayers)
-    }
+      setPlayers(response.poolPlayers);
+    };
 
     const fetchTeams = async () => {
       const response = await fetch(
         "https://api.mpg.football/api/data/championship-clubs"
       )
         .then((response) => response.json())
-        .catch((error) => console.error("error fetching data: ", error))
+        .catch((error) => console.error("error fetching data: ", error));
 
-      setTeams(response.championshipClubs)
-    }
+      setTeams(response.championshipClubs);
+    };
 
-    fetchPlayers()
-    fetchTeams()
-  }, [])
+    fetchPlayers();
+    fetchTeams();
+  }, []);
 
   const filterByName = () => {
-    setActiveColumn("name")
+    setActiveColumn("name");
     if (nameOrder === "desc") {
       const filteredPlayers = players.sort((a, b) => {
-        return a.lastName.localeCompare(b.lastName)
-      })
-      setPlayers(filteredPlayers)
-      setNameOrder("asc")
+        return a.lastName.localeCompare(b.lastName);
+      });
+      setPlayers(filteredPlayers);
+      setNameOrder("asc");
     } else {
       const filteredPlayers = players.sort((a, b) => {
-        return b.lastName.localeCompare(a.lastName)
-      })
-      setPlayers(filteredPlayers)
-      setNameOrder("desc")
+        return b.lastName.localeCompare(a.lastName);
+      });
+      setPlayers(filteredPlayers);
+      setNameOrder("desc");
     }
-  }
+  };
 
   const filterByPosition = () => {
-    setActiveColumn("position")
+    setActiveColumn("position");
     if (positionOrder === "desc") {
       const filteredPlayers = players.sort(
         (a, b) => a.ultraPosition - b.ultraPosition
-      )
-      setPlayers(filteredPlayers)
-      setPositionOrder("asc")
+      );
+      setPlayers(filteredPlayers);
+      setPositionOrder("asc");
     } else {
       const filteredPlayers = players.sort(
         (a, b) => b.ultraPosition - a.ultraPosition
-      )
-      setPlayers(filteredPlayers)
-      setPositionOrder("desc")
+      );
+      setPlayers(filteredPlayers);
+      setPositionOrder("desc");
     }
-  }
+  };
 
   const findJersey = (player: any): string => {
-    console.log(teams)
-
-    const team = teams[player.clubId]
-    return team.defaultJerseyUrl
-  }
+    const team = teams[player.clubId];
+    return team.defaultJerseyUrl;
+  };
 
   return (
     <div className="max-w-2xl mx-auto mt-20">
@@ -140,7 +138,7 @@ function Players() {
         </div>
       )}
     </div>
-  )
+  );
 }
 
-export default Players
+export default Players;

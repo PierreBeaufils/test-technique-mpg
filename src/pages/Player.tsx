@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router";
 import displayPosition from "../utils/displayPosition";
 import formatDate from "../utils/formatDate";
+import { Defender, FieldPlayer, GoalKeeper } from "../components";
 
 function Player() {
   let { playerId } = useParams();
@@ -22,8 +23,6 @@ function Player() {
         (player: any) => player.id === playerId
       );
       setPlayer(currentPlayer);
-      console.log(currentPlayer);
-
       fetchTeams(currentPlayer.clubId);
     };
 
@@ -36,7 +35,6 @@ function Player() {
 
       const currentTeam = response.championshipClubs[clubId];
       setTeam(currentTeam);
-      console.log(currentTeam);
 
       fetchPlayerStats();
     };
@@ -49,11 +47,20 @@ function Player() {
         .catch((error) => console.error("error fetching data: ", error));
 
       setPlayerStats(response);
-      console.log(response);
     };
 
     fetchPlayers();
   }, [playerId]);
+
+  const displayPositionStats = (position: number) => {
+    if (position === 1) {
+      return <GoalKeeper playerStats={playerStats} />;
+    } else if (position === 2) {
+      return <Defender playerStats={playerStats} />;
+    } else {
+      return <FieldPlayer playerStats={playerStats} />;
+    }
+  };
 
   return (
     <div className="max-w-2xl mx-auto mt-20">
@@ -77,56 +84,7 @@ function Player() {
           </div>
 
           {/* Résumé Stats */}
-          <div className="border rounded-md mt-10 p-4">
-            <p className="text-center text-xl">Résumé stats</p>
-            <div className="flex flex-row gap-2 items-center py-1">
-              <p className="w-28">Note</p>
-              <span className="bg-green-500 text-white rounded-md px-4 py-1 w-16 text-center">
-                {playerStats.championships[
-                  "1"
-                ].keySeasonStats.averageRating.toFixed(1)}
-              </span>
-            </div>
-            <div className="flex flex-row gap-2 items-center py-1">
-              <p className="w-28">Cote</p>
-              <span className="bg-green-500 text-white rounded-md px-4 py-1 w-16 text-center">
-                {playerStats.championships["1"].keySeasonStats.quotation}
-              </span>
-            </div>
-            <div className="flex flex-row gap-2 items-center py-1">
-              <p className="w-28">% Titu</p>
-              <span className="bg-green-500 text-white rounded-md px-4 py-1 w-16 text-center">
-                {Math.round(
-                  playerStats.championships["1"].keySeasonStats
-                    .percentageStarter
-                )}
-              </span>
-            </div>
-            <div className="flex flex-row gap-2 items-center py-1">
-              <p className="w-28">Buts / M.</p>
-              <span className="bg-green-500 text-white rounded-md px-4 py-1 w-16 text-center">
-                {playerStats.championships[
-                  "1"
-                ].keySeasonStats.ratioGoals.toFixed(2)}
-              </span>
-            </div>
-            <div className="flex flex-row gap-2 items-center py-1">
-              <p className="w-28">Occas. / M.</p>
-              <span className="bg-green-500 text-white rounded-md px-4 py-1 w-16 text-center">
-                {playerStats.championships[
-                  "1"
-                ].keySeasonStats.ratioBigChanceCreated.toFixed(2)}
-              </span>
-            </div>
-            <div className="flex flex-row gap-2 items-center py-1">
-              <p className="w-28">Tirs. / M.</p>
-              <span className="bg-green-500 text-white rounded-md px-4 py-1 w-16 text-center">
-                {playerStats.championships[
-                  "1"
-                ].keySeasonStats.ratioScoringAtt.toFixed(2)}
-              </span>
-            </div>
-          </div>
+          {displayPositionStats(playerStats.position)}
 
           {/* En forme */}
           <div className="border rounded-md mt-10 p-4">
@@ -151,7 +109,7 @@ function Player() {
           </div>
 
           {/* Historique des cotes */}
-          <div className="border rounded-md mt-10 p-4">
+          <div className="border rounded-md my-10 p-4">
             <p className="text-center text-xl">Historique des cotes</p>
             <div className="flex flex-row gap-3 overflow-x-auto pb-5 pt-5">
               {playerStats.championships["1"].total.quotations.map(
