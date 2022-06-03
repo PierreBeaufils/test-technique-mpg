@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, FC } from "react";
 import { useParams } from "react-router";
 import displayPosition from "../utils/displayPosition";
 import formatDate from "../utils/formatDate";
 import { Defender, FieldPlayer, GoalKeeper } from "../components";
 
-function Player() {
+const Player: FC = () => {
   let { playerId } = useParams();
 
   const [player, setPlayer] = useState<any | null>(null);
@@ -12,7 +12,7 @@ function Player() {
   const [team, setTeam] = useState<any>({});
 
   useEffect(() => {
-    const fetchPlayers = async () => {
+    const fetchPlayers = async (): Promise<void> => {
       const response = await fetch(
         "https://api.mpg.football/api/data/championship-players-pool/1"
       )
@@ -26,7 +26,7 @@ function Player() {
       fetchTeams(currentPlayer.clubId);
     };
 
-    const fetchTeams = async (clubId: string) => {
+    const fetchTeams = async (clubId: string): Promise<void> => {
       const response = await fetch(
         "https://api.mpg.football/api/data/championship-clubs"
       )
@@ -39,7 +39,7 @@ function Player() {
       fetchPlayerStats();
     };
 
-    const fetchPlayerStats = async () => {
+    const fetchPlayerStats = async (): Promise<void> => {
       const response = await fetch(
         `https://api.mpg.football/api/data/championship-player-stats/${playerId}/2021`
       )
@@ -115,7 +115,8 @@ function Player() {
               {playerStats.championships["1"].total.quotations.map(
                 (cote: any) => (
                   <div
-                    key={cote.coteId}
+                    //J'ai utilisé la date en key car il n'y a pas d'ID sur les quotations et la date est à priori unique
+                    key={cote.date}
                     className="flex flex-col gap-1 items-center justify-center shrink-0 grow-0"
                   >
                     <p className="rounded-md border border-green-400 text-green-400 flex items-center justify-center w-10 h-10">
@@ -133,6 +134,6 @@ function Player() {
       )}
     </div>
   );
-}
+};
 
 export default Player;

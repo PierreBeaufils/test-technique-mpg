@@ -10,7 +10,7 @@ function Players() {
   const [positionOrder, setPositionOrder] = useState<"asc" | "desc">("desc");
 
   useEffect(() => {
-    const fetchPlayers = async () => {
+    const fetchPlayers = async (): Promise<void> => {
       const response = await fetch(
         "https://api.mpg.football/api/data/championship-players-pool/1"
       )
@@ -20,7 +20,7 @@ function Players() {
       setPlayers(response.poolPlayers);
     };
 
-    const fetchTeams = async () => {
+    const fetchTeams = async (): Promise<void> => {
       const response = await fetch(
         "https://api.mpg.football/api/data/championship-clubs"
       )
@@ -34,7 +34,7 @@ function Players() {
     fetchTeams();
   }, []);
 
-  const filterByName = () => {
+  const filterByName = (): void => {
     setActiveColumn("name");
     if (nameOrder === "desc") {
       const filteredPlayers = players.sort((a, b) => {
@@ -51,7 +51,7 @@ function Players() {
     }
   };
 
-  const filterByPosition = () => {
+  const filterByPosition = (): void => {
     setActiveColumn("position");
     if (positionOrder === "desc") {
       const filteredPlayers = players.sort(
@@ -68,6 +68,7 @@ function Players() {
     }
   };
 
+  // Find the correct jersey url to display jersey image
   const findJersey = (player: any): string => {
     const team = teams[player.clubId];
     return team.defaultJerseyUrl;
@@ -122,7 +123,7 @@ function Players() {
                     {/* Note mise à 0 par défault si averageRating est null/undefined */}
                     {player.stats.averageRating
                       ? player.stats.averageRating.toFixed(1)
-                      : "5.0"}
+                      : "0"}
                   </div>
                   <div className="w-20 py-2 px-2 text-center">
                     {/* Buts mis à 0 par défault si totalGoals est null/undefined */}
