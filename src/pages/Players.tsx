@@ -71,7 +71,7 @@ function Players() {
   // Find the correct jersey url to display jersey image
   const findJersey = (player: any): string => {
     const team = teams[player.clubId];
-    return team.defaultJerseyUrl;
+    return team.defaultJerseyUrl ?? "";
   };
 
   return (
